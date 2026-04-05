@@ -95,6 +95,10 @@ func validateSuite(suite int) error {
 }
 
 func validateKey(suite int, key []byte, name string) error {
+	// Suite0 has no encryption/authentication, nil keys are allowed
+	if suite == SecuritySuite0 {
+		return nil
+	}
 	if key == nil {
 		return fmt.Errorf("security: %s key is nil", name)
 	}
@@ -301,6 +305,10 @@ func SM4GMAC(key, nonce, aad, ciphertext []byte) ([]byte, error) {
 
 // Encrypt performs encryption based on the security suite.
 func (sp *SecurityProcessor) Encrypt(invocationCounter uint32, plaintext, aad []byte) ([]byte, error) {
+	switch sp.suite {
+	case SecuritySuite0:
+		return nil, fmt.Errorf("security: suite 0 does not support encryption")
+	}
 	iv := sp.MakeIV(invocationCounter)
 	switch sp.suite {
 	case SecuritySuite1, SecuritySuite4:

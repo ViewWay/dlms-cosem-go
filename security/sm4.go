@@ -103,7 +103,7 @@ func sm4EncryptBlock(rk [sm4Rounds]uint32, in []byte) []byte {
 
 	out := make([]byte, 16)
 	for i := 0; i < 4; i++ {
-		v := X[32+4-i]
+		v := X[32+3-i]
 		out[4*i] = uint8(v >> 24)
 		out[4*i+1] = uint8(v >> 16)
 		out[4*i+2] = uint8(v >> 8)

@@ -335,9 +335,20 @@ func TestDecodeBERTag(t *testing.T) {
 }
 
 func TestDecodeBERTag_MultiByte(t *testing.T) {
+	// BER multi-byte tag encoding: 0x80 has continuation bit set (value 0), 0x01 is final (value 1)
+	// Tag number = (0 << 7) | 1 = 1
 	tag, n := decodeBERTag([]byte{0x1F, 0x80, 0x01})
-	if tag != 0x8001 || n != 3 {
+	if tag != 1 || n != 3 {
 		t.Errorf("got %d, %d", tag, n)
+	}
+}
+
+func TestDecodeBERTag_MultiByte_Large(t *testing.T) {
+	// Encode tag 0x8001 (32769) in base-128:
+	// 32769 = 2*128^2 + 0*128 + 1, so bytes are [2|0x80, 0|0x80, 1] = [0x82, 0x80, 0x01]
+	tag, n := decodeBERTag([]byte{0x1F, 0x82, 0x80, 0x01})
+	if tag != 0x8001 || n != 4 {
+		t.Errorf("got %d (0x%x), %d", tag, tag, n)
 	}
 }
 

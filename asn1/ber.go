@@ -28,10 +28,7 @@ func BEREncode(tag int, data []byte) []byte {
 }
 
 func BEREncodeLength0(tag int) []byte {
-	if tag < 0x1F {
-		return []byte{byte(tag), 0x00}
-	}
-	return []byte{0x1F, byte(tag), 0x00}
+	return []byte{byte(tag), 0x00}
 }
 
 func encodeBERLength(length int) []byte {
@@ -68,21 +65,29 @@ func BERDecode(data []byte) (int, []byte, int, error) {
 }
 
 func decodeBERTag(data []byte) (int, int) {
-	if data[0] < 0x1F {
+	// Check if lower 5 bits are NOT 0x1F (single-byte tag number)
+	if data[0]&0x1F != 0x1F {
 		return int(data[0]), 1
 	}
-	// Multi-byte tag
+	// Multi-byte tag: lower 5 bits are 0x1F, tag number follows in base-128
 	if len(data) < 2 {
 		return int(data[0]), 1
 	}
-	tag := int(data[1])
-	if data[1]&0x80 != 0 {
-		if len(data) >= 3 {
-			tag = (int(data[1]&0x7F) << 8) | int(data[2])
-			return tag, 3
+	var tag int
+	i := 1
+	for i < len(data) {
+		b := data[i]
+		tag = (tag << 7) | int(b&0x7F)
+		i++
+		if b&0x80 == 0 {
+			break // Last byte (no continuation bit)
+		}
+		if i >= len(data) {
+			// Incomplete multi-byte tag, return what we have
+			break
 		}
 	}
-	return tag, 2
+	return tag, i
 }
 
 func decodeBERLength(data []byte) (int, int, error) {
