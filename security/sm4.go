@@ -55,11 +55,11 @@ func sm4Tau(A uint32) uint32 {
 	return uint32(b0)<<24 | uint32(b1)<<16 | uint32(b2)<<8 | uint32(b3)
 }
 
-func sm4LPrime(B uint32) uint32 {
+func sm4L(B uint32) uint32 {
 	return B ^ rotl32(B, 2) ^ rotl32(B, 10) ^ rotl32(B, 18) ^ rotl32(B, 24)
 }
 
-func sm4L(B uint32) uint32 {
+func sm4LPrime(B uint32) uint32 {
 	return B ^ rotl32(B, 13) ^ rotl32(B, 23)
 }
 
