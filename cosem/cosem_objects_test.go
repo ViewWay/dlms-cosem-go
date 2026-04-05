@@ -273,7 +273,7 @@ func TestSecuritySetup_UnmarshalBinary_Short(t *testing.T) {
 
 func TestTariffPlan_ClassID(t *testing.T) {
 	tp := &TariffPlan{}
-	if tp.ClassID() != 26 {
+	if tp.ClassID() != core.ClassIDTariffSchedule {
 		t.Error("wrong class ID")
 	}
 }
@@ -399,7 +399,7 @@ func TestAccess_Default(t *testing.T) {
 
 func TestLPSetup_ClassID(t *testing.T) {
 	lp := &LPSetup{}
-	if lp.ClassID() != 26 {
+	if lp.ClassID() != core.ClassIDLpSetup {
 		t.Error("wrong class ID")
 	}
 }

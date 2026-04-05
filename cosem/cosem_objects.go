@@ -331,7 +331,7 @@ type TariffPlan struct {
 	Version     uint8
 }
 
-func (tp *TariffPlan) ClassID() uint16               { return 26 }
+func (tp *TariffPlan) ClassID() uint16               { return core.ClassIDTariffSchedule }
 func (tp *TariffPlan) GetLogicalName() core.ObisCode { return tp.LogicalName }
 func (tp *TariffPlan) GetVersion() uint8             { return tp.Version }
 func (tp *TariffPlan) Access(attr int) core.CosemAttributeAccess {
@@ -360,7 +360,7 @@ type TariffTable struct {
 	Version     uint8
 }
 
-func (tt *TariffTable) ClassID() uint16               { return 26 }
+func (tt *TariffTable) ClassID() uint16               { return core.ClassIDTariffSchedule }
 func (tt *TariffTable) GetLogicalName() core.ObisCode { return tt.LogicalName }
 func (tt *TariffTable) GetVersion() uint8             { return tt.Version }
 func (tt *TariffTable) Access(attr int) core.CosemAttributeAccess {
@@ -413,7 +413,7 @@ type LPSetup struct {
 	Version        uint8
 }
 
-func (lp *LPSetup) ClassID() uint16               { return 26 }
+func (lp *LPSetup) ClassID() uint16               { return core.ClassIDLpSetup }
 func (lp *LPSetup) GetLogicalName() core.ObisCode { return lp.LogicalName }
 func (lp *LPSetup) GetVersion() uint8             { return lp.Version }
 func (lp *LPSetup) Access(attr int) core.CosemAttributeAccess {
