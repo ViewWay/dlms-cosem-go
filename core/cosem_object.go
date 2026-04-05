@@ -78,13 +78,19 @@ const (
 	ClassIDSchedule           uint16 = 10
 	ClassIDSpecialDaysTable   uint16 = 11
 	ClassIDAssociationSN      uint16 = 12
-	ClassIDActivityCalendar   uint16 = 20
-	ClassIDRegisterMonitor    uint16 = 21
 	ClassIDAssociationLN      uint16 = 15
-	ClassIDIECLocalPortSetup  uint16 = 19
-	ClassIDIECHDLCSetup       uint16 = 23
 	ClassIDSAPAssignment      uint16 = 17
 	ClassIDImageTransfer      uint16 = 18
+	ClassIDIECLocalPortSetup  uint16 = 19
+	ClassIDActivityCalendar   uint16 = 20
+	ClassIDRegisterMonitor    uint16 = 21
+	ClassIDSingleActionSchedule uint16 = 22
+	ClassIDIECHDLCSetup       uint16 = 23
+	ClassIDUtilityTables      uint16 = 26
+	ClassIDValueTable         uint16 = 29
+	ClassIDRegisterTable      uint16 = 61
+	ClassIDCompactData        uint16 = 62
+	ClassIDStatusMapping      uint16 = 63
 	ClassIDPush               uint16 = 40
 	ClassIDTCPUDPSetup        uint16 = 41
 	ClassIDIPv4Setup          uint16 = 42
@@ -95,15 +101,12 @@ const (
 	ClassIDDisconnectControl  uint16 = 70
 	ClassIDLimiter            uint16 = 71
 	ClassIDMBusClient         uint16 = 72
-	ClassIDLorawanSetup       uint16 = 128
-	ClassIDSchcLPWAN          uint16 = 126
+	ClassIDSFKPLCMACSetup     uint16 = 82
+	ClassIDIECPublicKey       uint16 = 90
 	ClassIDNTPSetup           uint16 = 100
 	ClassIDZigbeeSASStartup   uint16 = 101
-	ClassIDSFKPLCMACSetup     uint16 = 82
-	ClassIDUtilityTables      uint16 = 26
-	ClassIDRegisterTable      uint16 = 61
-	ClassIDCompactData        uint16 = 62
-	ClassIDStatusMapping      uint16 = 63
+	ClassIDSchcLPWAN          uint16 = 126
+	ClassIDLorawanSetup       uint16 = 128
 )
 
 // String returns the class name for known class IDs.
@@ -125,6 +128,8 @@ func ClassIDName(id uint16) string {
 		return "ScriptTable"
 	case ClassIDSchedule:
 		return "Schedule"
+	case ClassIDSpecialDaysTable:
+		return "SpecialDaysTable"
 	case ClassIDAssociationLN:
 		return "AssociationLN"
 	case ClassIDAssociationSN:
@@ -167,6 +172,18 @@ func ClassIDName(id uint16) string {
 		return "CompactData"
 	case ClassIDStatusMapping:
 		return "StatusMapping"
+	case ClassIDActivityCalendar:
+		return "ActivityCalendar"
+	case ClassIDRegisterMonitor:
+		return "RegisterMonitor"
+	case ClassIDSingleActionSchedule:
+		return "SingleActionSchedule"
+	case ClassIDValueTable:
+		return "ValueTable"
+	case ClassIDIECPublicKey:
+		return "IECPublicKey"
+	case ClassIDSAPAssignment:
+		return "SAPAssignment"
 	default:
 		return fmt.Sprintf("Unknown(0x%04x)", id)
 	}
