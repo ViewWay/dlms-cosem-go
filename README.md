@@ -2,7 +2,7 @@
 
 **Complete DLMS/COSEM protocol stack for Go** — modular, sans-io implementation with HDLC framing, A-XDR codec, ASN.1 BER/DER, COSEM IC classes, security suites, server/client, and multiple transport layers.
 
-[![Tests](https://img.shields.io/badge/tests-446%20passed-brightgreen)]()
+[![Tests](https://img.shields.io/badge/tests-448%20passed-brightgreen)]()
 [![Go 1.21+](https://img.shields.io/badge/go-1.21%2B-00ADD8.svg)]()
 [![License: BSL 1.1](https://img.shields.io/badge/license-BSL%201.1-orange.svg)]()
 
@@ -62,7 +62,7 @@ go test ./... -v
 |----------|-------|-------|
 | [Python](https://github.com/ViewWay/dlms-cosem) | 5,146 | 37K |
 | [Rust](https://github.com/ViewWay/dlms-cosem-rust) | 739 | 21K |
-| **Go** | **362** | **~12K** |
+| **Go** | **448** | **~12K** |
 | [C++](https://github.com/ViewWay/dlms-cosem-cpp) | 280+ | 6.5K |
 | [C](https://github.com/ViewWay/dlms-cosem-c) | 36 | 6.2K |
 
