@@ -436,8 +436,9 @@ func TestSecurityProcessor_Authenticate(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(tag) != 12 {
-		t.Errorf("tag len=%d", len(tag))
+	// Suite1 uses AES-GCM, returns ciphertext+tag (16 bytes for nil plaintext)
+	if len(tag) != 16 {
+		t.Errorf("tag len=%d, want 16", len(tag))
 	}
 }
 
@@ -464,9 +465,9 @@ func TestSM4EncryptCBC_SingleBlock(t *testing.T) {
 	key := make([]byte, 16)
 	iv := make([]byte, 16)
 	ct := SM4EncryptCBC(key, iv, make([]byte, 1))
-	// Should be 2 blocks (padded)
-	if len(ct) != 32 {
-		t.Errorf("len=%d", len(ct))
+	// 1 byte + 15 bytes PKCS7 padding = 16 bytes = 1 block
+	if len(ct) != 16 {
+		t.Errorf("len=%d, want 16", len(ct))
 	}
 }
 

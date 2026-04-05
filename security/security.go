@@ -362,6 +362,14 @@ func HLSISM(authKey []byte, challenge, systemTitle []byte, fCount int) []byte {
 	data = append(data, byte(fCount>>24), byte(fCount>>16), byte(fCount>>8), byte(fCount))
 	data = append(data, 0, 0, 0, 1) // client to server
 
-	tag, _ := SM4GMAC(authKey, systemTitle, nil, data)
+	// Build 12-byte IV from system title
+	iv := make([]byte, 12)
+	copy(iv, systemTitle)
+	iv[8] = byte(fCount >> 24)
+	iv[9] = byte(fCount >> 16)
+	iv[10] = byte(fCount >> 8)
+	iv[11] = byte(fCount)
+
+	tag, _ := SM4GMAC(authKey, iv, nil, data)
 	return tag
 }
