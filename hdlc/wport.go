@@ -1,5 +1,7 @@
 package hdlc
 
+import "fmt"
+
 // wPort constants for DLMS/COSEM (Green Book 7.3.3.4)
 //
 // Wrapper port numbers (wPort) are used for addressing DLMS/COSEM
@@ -41,14 +43,20 @@ func IsReservedWPort(wport int) bool {
 
 // GetWPortDescription returns a description of a wPort number
 func GetWPortDescription(wport int) string {
+	// Special handling for 4059 (used for both UDP and TCP)
+	if wport == 4059 {
+		return "DLMS/COSEM UDP/TCP"
+	}
+
+	// Special handling for 0x0001 (used by both client and server)
+	if wport == 0x0001 {
+		return "Client Management Process / Management Logical Device"
+	}
+
 	descriptions := map[int]string{
-		WPortNoStation:           "No-station",
-		WPortClientMgmtProcess:   "Client Management Process",
-		WPortPublicClient:         "Public Client",
-		WPortMgmtLogicalDevice:  "Management Logical Device",
-		WPortAllStation:          "All-station (Broadcast)",
-		WPortDlmsCosemUDP:      "DLMS/COSEM UDP",
-		WPortDlmsCosemTCP:      "DLMS/COSEM TCP",
+		WPortNoStation:   "No-station",
+		WPortPublicClient: "Public Client",
+		WPortAllStation:  "All-station (Broadcast)",
 	}
 
 	if desc, ok := descriptions[wport]; ok {
