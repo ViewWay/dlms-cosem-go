@@ -2,6 +2,8 @@ package cosem
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/ViewWay/dlms-cosem-go/core"
 )
@@ -83,4 +85,68 @@ func (ps *PushSetup) AddObject(obj PushObject) {
 
 func (ps *PushSetup) ObjectCount() int {
 	return len(ps.PushObjectList)
+}
+
+// SendDestinationAndMethod combines Destination (SAP) and Service.
+// In a real implementation this would resolve to a transport endpoint.
+type SendDestinationAndMethod struct {
+	SAP      []byte
+	Service  uint16
+}
+
+// PushResult captures the outcome of a push attempt.
+type PushResult struct {
+	Success bool
+	Attempt int
+	Error   error
+}
+
+// ExecutePush triggers a push: serializes the PushObjectList and returns
+// the encoded payload along with the SendDestinationAndMethod metadata.
+// The caller is responsible for actual transport delivery.
+func (ps *PushSetup) ExecutePush() ([]byte, *SendDestinationAndMethod, error) {
+	if len(ps.PushObjectList) == 0 {
+		return nil, nil, fmt.Errorf("push_setup: empty object list")
+	}
+	payload, err := ps.MarshalBinary()
+	if err != nil {
+		return nil, nil, fmt.Errorf("push_setup: serialize failed: %w", err)
+	}
+	dest := &SendDestinationAndMethod{
+		SAP:     ps.Destination,
+		Service: ps.Service,
+	}
+	return payload, dest, nil
+}
+
+// IsWithinWindow checks whether the current time falls within the
+// RandomisationStartInterval window before the scheduled push time.
+// Returns true if now is within [windowEnd - interval, windowEnd].
+func (ps *PushSetup) IsWithinWindow(now, windowEnd time.Time) bool {
+	interval := time.Duration(ps.RandomisationStartInterval) * time.Second
+	if interval <= 0 {
+		return true
+	}
+	start := windowEnd.Add(-interval)
+	return !now.Before(start) && !now.After(windowEnd)
+}
+
+// ShouldRetry returns true if the attempt count has not exceeded NumberOfRetries.
+// attempt is 1-based (first call = attempt 1).
+func (ps *PushSetup) ShouldRetry(attempt int) bool {
+	if attempt < 1 {
+		return false
+	}
+	return attempt <= int(ps.NumberOfRetries)
+}
+
+// GetRetryDelay calculates the delay before the next retry attempt.
+// Uses RepetitionDelay with a random jitter in [0, RepetitionDelay) seconds.
+func (ps *PushSetup) GetRetryDelay(attempt int) time.Duration {
+	base := time.Duration(ps.RepetitionDelay) * time.Second
+	if base <= 0 {
+		return time.Second // default 1s
+	}
+	jitter := time.Duration(rand.Intn(int(base))) * time.Second
+	return base + jitter
 }
